@@ -21,7 +21,7 @@ private:
 	const int _influenceDist = 4;
 	const int _mapBorder = _influenceDist;
 
-	const int _forestTileValue = 42;
+	const int _forestTileValue = 92;
 	const int _mountainTileValue = 94;
 	const int _grassTileValue = 95;
 	const int _waterTileValue = 126;
