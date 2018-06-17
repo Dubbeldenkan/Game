@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-static class Draw
+class Draw
 {
 public:
 	const void DrawMatrix(Map*);

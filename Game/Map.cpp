@@ -28,7 +28,8 @@ void Map::SetTile(int x, int y, int tileType)
 void Map::CreateMap()
 {
 	int definedTiles = 0;
-	int randomNumberTiles = static_cast<int>(_mapXSize*_mapYSize*0.6);
+	int randomNumberTiles = 
+		static_cast<int>((_mapXSize - 2*_influenceDist)*(_mapYSize - 2*_influenceDist)*0.6);
 
 	for (int x = 0; x < _mapXSize; x++)
 	{

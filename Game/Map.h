@@ -18,7 +18,7 @@ public:
 private:
 	static const int _mapXSize = 200;
 	static const int _mapYSize = 50;
-	const int _influenceDist = 3;
+	const int _influenceDist = 4;
 	const int _mapBorder = _influenceDist;
 
 	const int _forestTileValue = 42;
