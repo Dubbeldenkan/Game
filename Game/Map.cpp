@@ -74,9 +74,10 @@ void Map::CreateMap()
 ///Definiera en tile baserad på omkringliggande tiles.
 void Map::DefineTile(int xPos, int yPos)
 {
-	int woodTiles = rand() % _influenceDist;
+	int forestTiles = rand() % _influenceDist;
 	int grassTiles = rand() % _influenceDist;
 	int mountainTiles = rand() % _influenceDist;
+	int waterTiles = rand() % (_influenceDist - 1);
 
 	for (int xDiff = -_influenceDist; xDiff <= _influenceDist; xDiff++)
 	{
@@ -90,30 +91,42 @@ void Map::DefineTile(int xPos, int yPos)
 				{
 					grassTiles += static_cast<int>((1 / (float) absDist) * _influenceDist);
 				}
-				else if (tileValue == _woodTileValue)
+				else if (tileValue == _forestTileValue)
 				{
-					woodTiles += static_cast<int>((1 / (float) absDist) * _influenceDist);
+					forestTiles += static_cast<int>((1 / (float) absDist) * _influenceDist);
 				}
 				else if (tileValue == _mountainTileValue)
 				{
 					mountainTiles += static_cast<int>((1 / (float) absDist) * _influenceDist);
 				}
+				else if (tileValue == _waterTileValue)
+				{
+					waterTiles += static_cast<int>((1 / (float)absDist) * _influenceDist);
+				}
 			}
 		}
 	}
-
+	
+	int highestTileValue = grassTiles;
 	int tileType = _grassTileValue;
-	if (grassTiles < woodTiles)
+
+	if (highestTileValue < forestTiles)
 	{
-		tileType = _woodTileValue;
-		if (woodTiles < mountainTiles)
-		{
-			tileType = _mountainTileValue;
-		}
+		tileType = _forestTileValue;
+		highestTileValue = forestTiles;
 	}
-	else if(grassTiles < mountainTiles)
+
+	if (highestTileValue < mountainTiles)
 	{
 		tileType = _mountainTileValue;
+		highestTileValue = mountainTiles;
 	}
+
+	if (highestTileValue < waterTiles)
+	{
+		tileType = _waterTileValue;
+		highestTileValue = waterTiles;
+	}
+		
 	SetTile(xPos, yPos, tileType);
 }

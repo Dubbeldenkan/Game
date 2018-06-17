@@ -18,12 +18,12 @@ public:
 private:
 	static const int _mapXSize = 200;
 	static const int _mapYSize = 50;
-	const int _mapBorder = 5;
 	const int _influenceDist = 3;
+	const int _mapBorder = _influenceDist;
 
-	const int _woodTileValue = 42;
+	const int _forestTileValue = 42;
 	const int _mountainTileValue = 94;
-	const int _grassTileValue = 44;
+	const int _grassTileValue = 95;
 	const int _waterTileValue = 126;
 
 	void DefineTile(int, int);
