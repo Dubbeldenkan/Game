@@ -2,7 +2,7 @@
 
 Map::Map()
 {
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(NULL)));
 }
 
 int Map::GetXMapSize()
@@ -28,7 +28,7 @@ void Map::SetTile(int x, int y, int tileType)
 void Map::CreateMap()
 {
 	int definedTiles = 0;
-	int randomNumberTiles = _mapXSize*_mapYSize*0.6;
+	int randomNumberTiles = static_cast<int>(_mapXSize*_mapYSize*0.6);
 
 	for (int x = 0; x < _mapXSize; x++)
 	{
@@ -77,7 +77,6 @@ void Map::DefineTile(int xPos, int yPos)
 	int woodTiles = rand() % _influenceDist;
 	int grassTiles = rand() % _influenceDist;
 	int mountainTiles = rand() % _influenceDist;
-	int waterTiles = rand() % _influenceDist;
 
 	for (int xDiff = -_influenceDist; xDiff <= _influenceDist; xDiff++)
 	{
@@ -89,19 +88,15 @@ void Map::DefineTile(int xPos, int yPos)
 				int tileValue = GetTile(xPos + xDiff, yPos + yDiff);
 				if (tileValue == _grassTileValue)
 				{
-					grassTiles += (1 / (float) absDist) * _influenceDist;
+					grassTiles += static_cast<int>((1 / (float) absDist) * _influenceDist);
 				}
 				else if (tileValue == _woodTileValue)
 				{
-					woodTiles += (1 / (float) absDist) * _influenceDist;
+					woodTiles += static_cast<int>((1 / (float) absDist) * _influenceDist);
 				}
 				else if (tileValue == _mountainTileValue)
 				{
-					mountainTiles += (1 / (float) absDist) * _influenceDist;
-				}
-				else if (tileValue == _waterTileValue)
-				{
-					waterTiles += (1 / (float)absDist) * _influenceDist;
+					mountainTiles += static_cast<int>((1 / (float) absDist) * _influenceDist);
 				}
 			}
 		}
