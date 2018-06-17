@@ -71,7 +71,7 @@ void Map::CreateMap()
 	}
 }
 
-///Definiera en tile baserad på omkringliggande tiles.  
+///Definiera en tile baserad på omkringliggande tiles.
 void Map::DefineTile(int xPos, int yPos)
 {
 	int woodTiles = rand() % _influenceDist;
