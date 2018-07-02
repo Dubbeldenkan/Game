@@ -4,6 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj", "{083F85D5-5261-4B96-96E5-01B883D94775}"
+	ProjectSection(ProjectDependencies) = postProject
+		{86759808-CD0A-4C42-9925-A67A1429E4A3} = {86759808-CD0A-4C42-9925-A67A1429E4A3}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct3DWrapper", "Direct3DWrapper\Direct3DWrapper.vcxproj", "{86759808-CD0A-4C42-9925-A67A1429E4A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F6220829-9C1B-4D65-8287-BDBF20A634F3}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.txt = ReadMe.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +31,14 @@ Global
 		{083F85D5-5261-4B96-96E5-01B883D94775}.Release|x64.Build.0 = Release|x64
 		{083F85D5-5261-4B96-96E5-01B883D94775}.Release|x86.ActiveCfg = Release|Win32
 		{083F85D5-5261-4B96-96E5-01B883D94775}.Release|x86.Build.0 = Release|Win32
+		{86759808-CD0A-4C42-9925-A67A1429E4A3}.Debug|x64.ActiveCfg = Debug|x64
+		{86759808-CD0A-4C42-9925-A67A1429E4A3}.Debug|x64.Build.0 = Debug|x64
+		{86759808-CD0A-4C42-9925-A67A1429E4A3}.Debug|x86.ActiveCfg = Debug|Win32
+		{86759808-CD0A-4C42-9925-A67A1429E4A3}.Debug|x86.Build.0 = Debug|Win32
+		{86759808-CD0A-4C42-9925-A67A1429E4A3}.Release|x64.ActiveCfg = Release|x64
+		{86759808-CD0A-4C42-9925-A67A1429E4A3}.Release|x64.Build.0 = Release|x64
+		{86759808-CD0A-4C42-9925-A67A1429E4A3}.Release|x86.ActiveCfg = Release|Win32
+		{86759808-CD0A-4C42-9925-A67A1429E4A3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

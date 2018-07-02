@@ -38,11 +38,11 @@ void Map::CreateMap()
 			if (x < _mapBorder || (_mapXSize - x) < _mapBorder
 				|| y < _mapBorder || (_mapYSize - y) < _mapBorder)
 			{
-				SetTile(x, y, _waterTileValue);
+				SetTile(x, y, TileType::Water);
 			}
 			else
 			{
-				SetTile(x, y, 0);
+				SetTile(x, y, TileType::Undefined);
 			}
 		}
 	}
@@ -80,27 +80,27 @@ void Map::DefineTile(int xPos, int yPos)
 	int mountainTiles = rand() % _influenceDist;
 	int waterTiles = rand() % (_influenceDist - 1);
 
-	for (int xDiff = -_influenceDist; xDiff <= _influenceDist; xDiff++)
+	for (int xDiff = -_influenceDist; xDiff < _influenceDist; xDiff++)
 	{
-		for (int yDiff = -_influenceDist; yDiff <= _influenceDist; yDiff++)
+		for (int yDiff = -_influenceDist; yDiff < _influenceDist; yDiff++)
 		{
 			int absDist = abs(xDiff) + abs(yDiff);
 			if (absDist != 0)
 			{
 				int tileValue = GetTile(xPos + xDiff, yPos + yDiff);
-				if (tileValue == _grassTileValue)
+				if (tileValue == TileType::FarmLand)
 				{
 					grassTiles += static_cast<int>((1 / (float) absDist) * _influenceDist);
 				}
-				else if (tileValue == _forestTileValue)
+				else if (tileValue == TileType::Forest)
 				{
 					forestTiles += static_cast<int>((1 / (float) absDist) * _influenceDist);
 				}
-				else if (tileValue == _mountainTileValue)
+				else if (tileValue == TileType::Mountain)
 				{
 					mountainTiles += static_cast<int>((1 / (float) absDist) * _influenceDist);
 				}
-				else if (tileValue == _waterTileValue)
+				else if (tileValue == TileType::Water)
 				{
 					waterTiles += static_cast<int>((1 / (float)absDist) * _influenceDist);
 				}
@@ -109,23 +109,23 @@ void Map::DefineTile(int xPos, int yPos)
 	}
 	
 	int highestTileValue = grassTiles;
-	int tileType = _grassTileValue;
+	int tileType = TileType::FarmLand;
 
 	if (highestTileValue < forestTiles)
 	{
-		tileType = _forestTileValue;
+		tileType = TileType::Forest;
 		highestTileValue = forestTiles;
 	}
 
 	if (highestTileValue < mountainTiles)
 	{
-		tileType = _mountainTileValue;
+		tileType = TileType::Mountain;
 		highestTileValue = mountainTiles;
 	}
 
 	if (highestTileValue < waterTiles)
 	{
-		tileType = _waterTileValue;
+		tileType = TileType::Water;
 		highestTileValue = waterTiles;
 	}
 		
