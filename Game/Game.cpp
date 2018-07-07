@@ -3,24 +3,50 @@
 Game::Game(HWND hWnd)
 {
 	//init rand
-	srand(static_cast<unsigned int>(time(NULL)));
+	srand((unsigned int) time(NULL));
 
 	_draw = Draw(&hWnd);
-	_map.CreateMap();
+	_map.InitMap(_draw.GetGraphics());
+
+	InitGame();
+}
+
+int Game::GetSleepTimeInMs()
+{
+	return _sleepTimeInMs;
 }
 
 void Game::Run()
 {
-	DrawScreen();
-	// TODO: PrintDataToLog(tempGameTurn);
+	if(true)
+	{
+		//TODO
+	}
+	else
+	{
+		//game over
+		_gameOver = true;
+	}
 }
 
-
-void Game::DrawScreen()
+void Game::DrawGameBoard()
 {
-
-	_draw.DrawView(&_map);
+	Draw::DrawInput dI;
+	dI.map = &_map;
+	_draw.DrawGameBoard(&dI);
 }
 
-void Game::CheckIfGameHasEnded()
-{}
+Draw* Game::GetDraw()
+{
+	return &_draw;
+}
+
+bool Game::GetGameOver()
+{
+	return _gameOver;
+}
+
+void Game::InitGame()
+{
+	//TODO
+}

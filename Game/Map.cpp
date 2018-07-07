@@ -5,14 +5,15 @@ Map::Map()
 	srand(static_cast<unsigned int>(time(NULL)));
 }
 
-int Map::GetXMapSize()
+void Map::InitMap(GraphicsNS::Graphics* g)
 {
-	return _mapXSize;
-}
+	g->LoadImageFromFile("Map/Farmland.png", &_farmland, TILESIZE, TILESIZE);
+	g->LoadImageFromFile("Map/Forest.png", &_forest, TILESIZE, TILESIZE);
+	g->LoadImageFromFile("Map/Mountain.png", &_mountain, TILESIZE, TILESIZE);
+	g->LoadImageFromFile("Map/Swamp.png", &_swamp, TILESIZE, TILESIZE);
+	g->LoadImageFromFile("Map/Water.png", &_water, TILESIZE, TILESIZE);
 
-int Map::GetYMapSize()
-{
-	return _mapYSize;
+	CreateMap();
 }
 
 int Map::GetTile(int x, int y)
@@ -29,14 +30,14 @@ void Map::CreateMap()
 {
 	int definedTiles = 0;
 	int randomNumberTiles = 
-		static_cast<int>((_mapXSize - 2*_influenceDist)*(_mapYSize - 2*_influenceDist)*0.6);
+		static_cast<int>((MAPXSIZE - 2*_influenceDist)*(MAPYSIZE - 2*_influenceDist)*0.6);
 
-	for (int x = 0; x < _mapXSize; x++)
+	for (int x = 0; x < MAPXSIZE; x++)
 	{
-		for (int y = 0; y < _mapYSize; y++)
+		for (int y = 0; y < MAPYSIZE; y++)
 		{
-			if (x < _mapBorder || (_mapXSize - x) < _mapBorder
-				|| y < _mapBorder || (_mapYSize - y) < _mapBorder)
+			if (x < _mapBorder || (MAPXSIZE- x) < _mapBorder
+				|| y < _mapBorder || (MAPYSIZE- y) < _mapBorder)
 			{
 				SetTile(x, y, TileType::Water);
 			}
@@ -51,8 +52,8 @@ void Map::CreateMap()
 	int randYPos;
 	while (definedTiles < randomNumberTiles)
 	{
-		randXPos = rand() % (_mapXSize - _mapBorder) + _mapBorder;
-		randYPos = rand() % (_mapYSize - _mapBorder) + _mapBorder;
+		randXPos = rand() % (MAPXSIZE - _mapBorder) + _mapBorder;
+		randYPos = rand() % (MAPYSIZE - _mapBorder) + _mapBorder;
 		if (GetTile(randXPos, randYPos) == 0)
 		{
 			DefineTile(randXPos, randYPos);
@@ -60,9 +61,9 @@ void Map::CreateMap()
 		}
 	}
 
-	for (int x = 0; x < _mapXSize; x++)
+	for (int x = 0; x < MAPXSIZE; x++)
 	{
-		for (int y = 0; y < _mapYSize; y++)
+		for (int y = 0; y < MAPYSIZE; y++)
 		{
 			if (GetTile(x, y) == 0)
 			{
@@ -130,4 +131,33 @@ void Map::DefineTile(int xPos, int yPos)
 	}
 		
 	SetTile(xPos, yPos, tileType);
+}
+
+GraphicsNS::Image* Map::GetTileImage(int xPos, int yPos)
+{
+	GraphicsNS::Image* temp = &_water;
+
+	switch (GetTile(xPos, yPos))
+	{
+	case TileType::FarmLand:
+		temp = &_farmland;
+		break;
+	case TileType::Forest:
+		temp = &_forest;
+		break;
+	case TileType::Mountain:
+		temp = &_mountain;
+		break;
+	case TileType::Swamp:
+		temp = &_swamp;
+		break;
+	case TileType::Water:
+		temp = &_water;
+		break;
+	default:
+		printf("Undefined tiletype");
+		break;
+	}
+
+	return temp;
 }

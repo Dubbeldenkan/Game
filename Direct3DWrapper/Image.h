@@ -8,28 +8,21 @@ namespace GraphicsNS
 
 	class Image
 	{
-		int xSize;
-		int ySize;
-	public:
+		int _xSize = 0;
+		int _ySize = 0;
 		LPDIRECT3DTEXTURE9 _texture;
+	public:
 
 		Image() {};
 
-		int GetxSize()
-		{
-			D3DSURFACE_DESC surfaceDesc;
-			_texture->GetLevelDesc(0, &surfaceDesc);
-			return surfaceDesc.Width;
-		}
+		int GetXSize();
+		int GetYSize();
 
-		int GetYSize()
-		{
-			D3DSURFACE_DESC surfaceDesc;
-			_texture->GetLevelDesc(0, &surfaceDesc);
-			return surfaceDesc.Height;
-		}
+		void SetXSize(int);
+		void SetYSize(int);
+
+		LPDIRECT3DTEXTURE9* GetTexture();
 	};
-
 }
 
 #endif // !IMAGE_H

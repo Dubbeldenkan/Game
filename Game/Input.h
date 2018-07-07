@@ -5,23 +5,22 @@
 
 #include "Game.h"
 #include "Draw.h"
+#include "HelpStructs.h"
 
 class Input
 {
+private:
 	static Game* _game;
-
-	static Draw::Pos _mousePos;
 
 public:
 	Input();
 	~Input() {};
 
-	void SetGame(Game*);
+	void InitInput(Game*);
+	void EndGame();
 
 	static LRESULT CALLBACK MsgProc(HWND, UINT, WPARAM, LPARAM);
-
-private:
-	static void MouseClick();
+	static void SetKeyAction(Game* game, bool keyDown, WPARAM);
 };
 
 void InitWinMain(HINSTANCE*, char*, Input*);

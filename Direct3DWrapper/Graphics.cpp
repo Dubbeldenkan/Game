@@ -1,7 +1,9 @@
 #include "Graphics.h"
 
+
 namespace GraphicsNS
 {
+
 	Graphics::Graphics() {};
 
 	Graphics::Graphics(HWND hWnd)
@@ -86,6 +88,13 @@ namespace GraphicsNS
 		{
 			OutputDebugString("Unable to setup font8\n\n");
 		}
+
+		//load pixel Images
+		LoadImageFromFile("Pixel/Red.png", &redPixel);
+		LoadImageFromFile("Pixel/Blue.png", &bluePixel);
+		LoadImageFromFile("Pixel/Black.png", &blackPixel);
+		LoadImageFromFile("Pixel/White.png", &whitePixel);
+		LoadImageFromFile("Pixel/Green.png", &greenPixel);
 	}
 
 	Graphics::~Graphics()
@@ -105,7 +114,7 @@ namespace GraphicsNS
 			_sprite->Release();
 			_sprite = 0;
 		}
-		for (int i = 0; static_cast<unsigned int>(i) < imageVector.size(); i++)
+		for (int i = 0; i < (int)imageVector.size(); i++)
 		{
 			delete imageVector[i];
 		}
@@ -132,26 +141,53 @@ namespace GraphicsNS
 		}
 	}
 
-	Image Graphics::LoadImage(const char* fileName)
+	//Används då man bara har en bild, dvs inte flera tiles
+	void Graphics::LoadImageFromFile(const char* fileName, Image* image)
+	{
+		LoadImageFromFile(fileName, image, 0, 0, 0, 0);
+	}
+
+	//Används då man bara har en bild, dvs inte flera tiles och definierad storlek
+	void Graphics::LoadImageFromFile(const char* fileName, Image* image, int imageXSize, int imageYSize)
+	{
+		LoadImageFromFile(fileName, image, imageXSize, imageYSize, 0, 0);
+	}
+
+	//Används då man bara har en flera tiles
+	void Graphics::LoadImageFromFile(const char* fileName, Image* image, int imageXSize, int imageYSize,
+		int partImageSizeX, int partImageSizeY)
 	{
 		char path[MAX_PATH];
 		strcpy_s(path, imagePath);
 		strcat_s(path, fileName);
-		Image result;
-		HRESULT hr = D3DXCreateTextureFromFile(
+		HRESULT hr = D3DXCreateTextureFromFileEx(
 			_d3dDevice,
 			path,
-			&result._texture);
+			imageXSize, imageYSize,
+			1,
+			0,
+			D3DFMT_UNKNOWN,
+			D3DPOOL_MANAGED,
+			D3DX_DEFAULT,
+			D3DX_DEFAULT,
+			D3DCOLOR_XRGB(0, 0, 0),
+			0, 0,
+			image->GetTexture());
 		if (FAILED(hr))
 		{
 			OutputDebugString("Cannot load image\n\n");
 		}
 		else
 		{
-			imageVector.push_back(&result);
-			OutputDebugString("Image was loaded\n\n");
+			imageVector.push_back(image);
+			char result[100];
+			strcpy_s(result, "Image ");
+			strcat_s(result, fileName);
+			strcat_s(result, " was loaded\n\n");
+			OutputDebugString(result);
 		}
-		return result;
+		image->SetXSize(partImageSizeX);
+		image->SetYSize(partImageSizeY);
 	}
 
 	void Graphics::StartDrawing()
@@ -167,12 +203,12 @@ namespace GraphicsNS
 	void Graphics::Draw(Image* image, int x, int y, float scale)
 	{
 		D3DXVECTOR3 position(x / scale, y / scale, 0);
-		_sprite->Begin(0);
+		_sprite->Begin(D3DXSPRITE_ALPHABLEND);
 		D3DXMATRIX transformMatrix;
 		D3DXMatrixScaling(&transformMatrix, scale, scale, 0.0f);
 		_sprite->SetTransform(&transformMatrix);
 		_sprite->Draw(
-			image->_texture,
+			*(image->GetTexture()),
 			0,
 			0,
 			&position,
@@ -180,12 +216,87 @@ namespace GraphicsNS
 		_sprite->End();
 	}
 
-	void Graphics::PrintText8(char* text, int xPos, int yPos, D3DCOLOR color)
+	void Graphics::DrawTile(Image* image, int x, int y, int tileIndex, int orientation)
+	{
+		D3DXVECTOR3 position((float)x, (float)y, 0.0f);
+		RECT* rect = new RECT();
+		rect->top = 0;
+		rect->bottom = image->GetYSize();
+		rect->left = image->GetXSize()*tileIndex;
+		rect->right = image->GetXSize()*(tileIndex + 1);
+		D3DXVECTOR2 center((float)x + image->GetXSize() / 2, (float)y + image->GetYSize() / 2);
+		D3DXMATRIX transformMatrix;
+		D3DXMatrixTransformation2D(&transformMatrix, NULL, NULL, NULL, &center, ((float)orientation) / 100.0f, NULL);
+		_sprite->SetTransform(&transformMatrix);
+		_sprite->Begin(D3DXSPRITE_ALPHABLEND);
+		_sprite->Draw(
+			*(image->GetTexture()),
+			rect,
+			0,
+			&position,
+			D3DCOLOR_XRGB(255, 255, 255));
+		free(rect);
+		_sprite->End();
+	}
+
+	//if mirros is true the image should be mirrored over the y-axis
+	void Graphics::DrawAnimation(Image* image, int xPos, int yPos, int imageIndex, int mirror)
+	{
+		D3DXVECTOR3 position;
+		int direction;
+		if (mirror)
+		{
+			position = D3DXVECTOR3((float)-xPos - image->GetXSize(), (float)yPos, 0.0f);
+			direction = -1;
+		}
+		else
+		{
+			position = D3DXVECTOR3((float)xPos, (float)yPos, 0);
+			direction = 1;
+		}
+		RECT* rect = new RECT();
+		rect->top = 0;
+		rect->bottom = image->GetYSize();
+		rect->left = image->GetXSize()*imageIndex;
+		rect->right = image->GetXSize()*(imageIndex + 1);
+		_sprite->Begin(D3DXSPRITE_ALPHABLEND);
+		D3DXMATRIX transformMatrix;
+		D3DXMatrixScaling(&transformMatrix, (float)direction, 1.0f, 1.0f);
+		_sprite->SetTransform(&transformMatrix);
+		_sprite->Draw(
+			*(image->GetTexture()),
+			rect,
+			0,
+			&position,
+			D3DCOLOR_XRGB(255, 255, 255));
+		free(rect);
+		_sprite->End();
+	}
+
+	void Graphics::DrawRotateImage(Image* image, int xPos, int yPos, double angle, int direction)
+	{
+		D3DXVECTOR3 position((float)xPos, (float)yPos, 0.0f);
+		_sprite->Begin(D3DXSPRITE_ALPHABLEND);
+		D3DXMATRIX transformMatrix;
+		D3DXMatrixScaling(&transformMatrix, (float)direction, 1.0f, 1.0f);
+		D3DXVECTOR2 center((float)xPos, (float)yPos);
+		D3DXMatrixTransformation2D(&transformMatrix, NULL, NULL, NULL, &center, (float)angle, NULL);
+		_sprite->SetTransform(&transformMatrix);
+		_sprite->Draw(
+			*(image->GetTexture()),
+			0,
+			0,
+			&position,
+			D3DCOLOR_XRGB(255, 255, 255));
+		_sprite->End();
+	}
+
+	void Graphics::PrintText8(std::string text, int xPos, int yPos, D3DCOLOR color)
 	{
 		RECT rectangle = { xPos, yPos, 0, 0 };
 		_font8->DrawText(
 			0,
-			text,
+			text.c_str(),
 			-1,
 			&rectangle,
 			DT_NOCLIP,
@@ -200,12 +311,12 @@ namespace GraphicsNS
 		PrintText8((char*)buffer, xPos, yPos, color);
 	}
 
-	void Graphics::PrintText15(char* text, int xPos, int yPos, D3DCOLOR color)
+	void Graphics::PrintText15(std::string text, int xPos, int yPos, D3DCOLOR color)
 	{
 		RECT rectangle = { xPos, yPos, 0, 0 };
 		_font15->DrawText(
 			0,
-			text,
+			text.c_str(),
 			-1,
 			&rectangle,
 			DT_NOCLIP,
@@ -220,4 +331,50 @@ namespace GraphicsNS
 		PrintText15((char*)buffer, xPos, yPos, color);
 	}
 
+	void Graphics::DrawRectangle(int xPos, int yPos, int xSize, int ySize, D3DCOLOR color)
+	{
+		Image* image = NULL;
+		switch (color)
+		{
+		case WHITE:
+		{
+			image = &whitePixel;
+			break;
+		}
+		case BLACK:
+		{
+			image = &blackPixel;
+			break;
+		}
+		case RED:
+		{
+			image = &redPixel;
+			break;
+		}
+		case BLUE:
+		{
+			image = &bluePixel;
+			break;
+		}
+		case GREEN:
+		{
+			image = &greenPixel;
+			break;
+		}
+		default:
+			break;
+		}
+		D3DXVECTOR3 position((float)xPos / (float)xSize, (float)yPos / (float)ySize, 0.0f);
+		_sprite->Begin(D3DXSPRITE_ALPHABLEND);
+		D3DXMATRIX transformMatrix;
+		D3DXMatrixScaling(&transformMatrix, (float)xSize, (float)ySize, 0.0f);
+		_sprite->SetTransform(&transformMatrix);
+		_sprite->Draw(
+			*(image->GetTexture()),
+			0,
+			0,
+			&position,
+			D3DCOLOR_XRGB(255, 255, 255));
+		_sprite->End();
+	}
 }

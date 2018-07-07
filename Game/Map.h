@@ -1,32 +1,43 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "Point.h"
 #include <stdlib.h>
 #include <time.h>
+
+#include "Image.h"
+#include "Graphics.h"
 
 class Map
 {
 public:
+	static const int MAPXSIZE = 100;
+	static const int MAPYSIZE = 100;
+	static const int TILESIZE = 5;
+
+	enum TileType { Undefined, FarmLand, Forest, Mountain, Swamp, Water };
+
 	Map();
+	~Map() {}; //TODO gör bra destructorer för alla klasser
 
-	int GetXMapSize();
-	int GetYMapSize();
-	void CreateMap();
-	int GetTile(int, int);
-
-	enum TileType { Undefined, FarmLand, Forest, Mountain, Swamp, Water};
+	void InitMap(GraphicsNS::Graphics*);
+	GraphicsNS::Image* GetTileImage(int, int);
 
 private:
-	static const int _mapXSize = 1300;
-	static const int _mapYSize = 660;
-	const int _influenceDist = 20;
+	const int _influenceDist = 7;
 	const int _mapBorder = _influenceDist;
 
 	void DefineTile(int, int);
 	void SetTile(int, int, int);
+	int GetTile(int, int);
+	void CreateMap();
 
-	int _matrix[_mapXSize][_mapYSize];
+	int _matrix[MAPXSIZE][MAPYSIZE];
+
+	GraphicsNS::Image _farmland;
+	GraphicsNS::Image _forest;
+	GraphicsNS::Image _mountain;
+	GraphicsNS::Image _swamp;
+	GraphicsNS::Image _water;
 };
 
 #endif // !MAP_H

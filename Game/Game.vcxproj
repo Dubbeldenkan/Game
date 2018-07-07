@@ -161,17 +161,20 @@
   <ItemGroup>
     <ClInclude Include="Draw.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="HelpStructs.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="Point.h" />
+    <ClInclude Include="MovingObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Draw.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Point.cpp" />
+    <ClCompile Include="MovingObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Direct3DWrapper\Direct3DWrapper.vcxproj">

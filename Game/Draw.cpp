@@ -3,62 +3,51 @@
 Draw::Draw(HWND* hWnd)
 {
 	_g = new GraphicsNS::Graphics(*hWnd);
-	
-	_farmland = _g->LoadImage("Farmland.png");
-	_forest = _g->LoadImage("Forest.png");
-	_mountain = _g->LoadImage("Mountain.png");
-	_swamp = _g->LoadImage("Swamp.png");
-	_water = _g->LoadImage("Water.png");
 }
 
-void Draw::DrawView(Map* map)
-{	
-	GraphicsNS::Image* temp = &_water;
+GraphicsNS::Graphics* Draw::GetGraphics()
+{
+	return _g;
+}
 
+void Draw::DrawGameBoard(DrawInput* dI)
+{
 	_g->Clear();
 	_g->StartDrawing();
-	for (int x = 0; x < map->GetXMapSize(); x++)
-	{
-		for (int y = 0; y < map->GetYMapSize(); y++)
-		{
-			switch (map->GetTile(x, y))
-			{
-			case map->TileType::FarmLand:
-				temp = &_farmland;
-				break;
-			case map->TileType::Forest:
-				temp = &_forest;
-				break;
-			case map->TileType::Mountain:
-				temp = &_mountain;
-				break;
-			case map->TileType::Swamp:
-				temp = &_swamp;
-				break;
-			case map->TileType::Water:
-				temp = &_water;
-				break;
-			default:
-				printf("Undefined tiletype");
-				break;
-			}
-			_g->Draw(temp, x, y, 0.5);
-		}
-	}
+	DrawMap(dI->map);
+	//TODO lägg till gubbar 
 	_g->StopDrawing();
 	_g->Flip();
 }
 
-
-/*const void Draw::DrawMatrix(Map* map)
+void Draw::DrawMap(Map* map)
 {
-	for (int yPos = 0; yPos < map->GetYMapSize(); yPos++)
+	for (int xIndex = 0; xIndex < map->MAPXSIZE; xIndex++)
 	{
-		std::string row = "";
-		for (int xPos = 0; xPos < map->GetXMapSize(); xPos++)
+		for (int yIndex = 0; yIndex < map->MAPYSIZE; yIndex++)
 		{
-			row = row + static_cast<char>(map->GetTile(xPos, yPos));
+			_g->DrawTile(map->GetTileImage(xIndex, yIndex), xIndex*map->TILESIZE, yIndex*map->TILESIZE, 0, 0);
+			//TODO här kan man lägga in olika riktningar på tiles
 		}
-		std::cout << row << "\n";
 	}
-}*/
+}
+
+void Draw::DrawMovingObject(MovingObject* mo)
+{
+	if (mo->GetAnimationDirection() == (int)MovingObject::west)
+	{
+		_g->DrawAnimation(mo->GetImage(), (int)mo->GetPos().x, (int)mo->GetPos().y,
+			(int)mo->GetAnimationState() + 8, true);
+	}
+	else
+	{
+		_g->DrawAnimation(mo->GetImage(), (int)mo->GetPos().x, (int)mo->GetPos().y,
+			(int)mo->GetAnimationState() + (int)mo->GetAnimationDirection() * 4,
+			false);
+	}
+}
+
+void Draw::DrawGameObject(GameObject* object)
+{
+	_g->Draw(object->GetImage(), object->GetPos().x, object->GetPos().y, 1);
+}
