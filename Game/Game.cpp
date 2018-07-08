@@ -7,6 +7,8 @@ Game::Game(HWND hWnd)
 
 	_draw = Draw(&hWnd);
 	_map.InitMap(_draw.GetGraphics());
+	_players.push_back(Player(true));
+	_localPlayer = &_players[0]; //Get a pointer to the first player
 
 	InitGame();
 }
@@ -18,9 +20,10 @@ int Game::GetSleepTimeInMs()
 
 void Game::Run()
 {
+	//TODO ändra till ett lämpligt villkor
 	if(true)
 	{
-		//TODO
+		_localPlayer->MoveScreen();
 	}
 	else
 	{
@@ -29,11 +32,12 @@ void Game::Run()
 	}
 }
 
-void Game::DrawGameBoard()
+void Game::DrawScreen()
 {
 	Draw::DrawInput dI;
 	dI.map = &_map;
-	_draw.DrawGameBoard(&dI);
+	dI.player = _localPlayer;
+	_draw.DrawScreen(&dI);
 }
 
 Draw* Game::GetDraw()
@@ -49,4 +53,33 @@ bool Game::GetGameOver()
 void Game::InitGame()
 {
 	//TODO
+}
+
+void Game::SetPlayerKeyDown(Game::PlayerControl playerCtrl, bool keyDown)
+{
+	Player::MoveEnum playerDir;
+	switch (playerCtrl)
+	{
+	case Game::EAST:
+	{
+		playerDir = Player::east;
+		break;
+	}
+	case Game::WEST:
+	{
+		playerDir = Player::west;
+		break;
+	}
+	case Game::NORTH:
+	{
+		playerDir = Player::north;
+		break;
+	}
+	case Game::SOUTH:
+	{
+		playerDir = Player::south;
+		break;
+	}
+	}
+	_localPlayer->SetLocalPlayerMovement(playerDir, keyDown);
 }

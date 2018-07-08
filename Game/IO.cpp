@@ -1,4 +1,4 @@
-#include "Input.h"
+#include "IO.h"
 
 const int ID_NEW_GAME = 0;
 const int ID_EXIT = 1;
@@ -21,40 +21,55 @@ struct PlayerInput
 	}
 };
 
-Game* Input::_game;
+Game* IO::_game;
 
 const PlayerInput playerInput =
 PlayerInput(VK_UP, VK_DOWN, VK_RIGHT, VK_LEFT);
 
-Input::Input()
+IO::IO()
 {}
 
-void Input::InitInput(Game* game)
+void IO::InitIO(Game* game)
 {
 	_game = game;
 }
 
-void Input::SetKeyAction(Game* game, bool keyDown, WPARAM wParam)
+void IO::SetKeyAction(Game* game, bool keyDown, WPARAM wParam)
 {
-	//TODO
+	if (wParam == playerInput.right)
+	{
+		_game->SetPlayerKeyDown(Game::EAST, keyDown);
+	}
+	if (wParam == playerInput.left)
+	{
+		_game->SetPlayerKeyDown(Game::WEST, keyDown);
+	}
+	if (wParam == playerInput.up)
+	{
+		_game->SetPlayerKeyDown(Game::NORTH, keyDown);
+	}
+	if (wParam == playerInput.down)
+	{
+		_game->SetPlayerKeyDown(Game::SOUTH, keyDown);
+	}
 }
 
-void InitWinMain(HINSTANCE* hInst, char* winName, Input* input)
+void InitWinMain(HINSTANCE* hInst, char* winName, IO* io)
 {
 	WNDCLASS wc = { 0 };
-	wc.lpfnWndProc = input->MsgProc;
+	wc.lpfnWndProc = io->MsgProc;
 	wc.hInstance = *hInst;
 	wc.lpszClassName = winName;
 	wc.hCursor = (HCURSOR)LoadCursor(0, IDC_ARROW);
 	RegisterClass(&wc);
 }
 
-HWND InitWindow(HINSTANCE* hInst, char* winName, Input* input)
+HWND InitWindow(HINSTANCE* hInst, char* winName, IO* io)
 {
-	InitWinMain(hInst, winName, input);
+	InitWinMain(hInst, winName, io);
 
 	DWORD windowStyle = WS_OVERLAPPEDWINDOW;
-	RECT windowRect = { 1, 1, Map::MAPXSIZE*Map::TILESIZE, Map::MAPXSIZE*Map::TILESIZE};
+	RECT windowRect = { 1, 1, Player::SCREENXSIZE*Map::TILESIZE, Player::SCREENYSIZE*Map::TILESIZE };
 	AdjustWindowRect(&windowRect, windowStyle, false);
 	HWND hWnd = CreateWindow(
 		winName,
@@ -71,7 +86,7 @@ HWND InitWindow(HINSTANCE* hInst, char* winName, Input* input)
 	return hWnd;
 }
 
-LRESULT CALLBACK Input::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK IO::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
@@ -95,7 +110,7 @@ LRESULT CALLBACK Input::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-void Input::EndGame()
+void IO::EndGame()
 {
 	std::string text = "Spelet är slut." 
 		"\nVill du spela en ny omgång?";

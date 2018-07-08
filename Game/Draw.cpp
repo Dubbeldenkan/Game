@@ -10,23 +10,24 @@ GraphicsNS::Graphics* Draw::GetGraphics()
 	return _g;
 }
 
-void Draw::DrawGameBoard(DrawInput* dI)
+void Draw::DrawScreen(DrawInput* dI)
 {
 	_g->Clear();
 	_g->StartDrawing();
-	DrawMap(dI->map);
+	DrawMap(dI->map, dI->player);
 	//TODO lägg till gubbar 
 	_g->StopDrawing();
 	_g->Flip();
 }
 
-void Draw::DrawMap(Map* map)
+void Draw::DrawMap(Map* map, Player* player)
 {
-	for (int xIndex = 0; xIndex < map->MAPXSIZE; xIndex++)
+	for (int xIndex = player->GetViewPos().x; xIndex < (player->GetViewPos().x + Player::SCREENXSIZE); xIndex++)
 	{
-		for (int yIndex = 0; yIndex < map->MAPYSIZE; yIndex++)
+		for (int yIndex = player->GetViewPos().y; yIndex < (player->GetViewPos().y + Player::SCREENYSIZE); yIndex++)
 		{
-			_g->DrawTile(map->GetTileImage(xIndex, yIndex), xIndex*map->TILESIZE, yIndex*map->TILESIZE, 0, 0);
+			_g->DrawTile(map->GetTileImage(xIndex, yIndex), 
+				(xIndex - player->GetViewPos().x)*map->TILESIZE, (yIndex - player->GetViewPos().y)*map->TILESIZE, 0, 0);
 			//TODO här kan man lägga in olika riktningar på tiles
 		}
 	}

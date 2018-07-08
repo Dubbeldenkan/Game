@@ -3,6 +3,7 @@
 
 #include "Draw.h"
 #include "Map.h"
+#include "Player.h"
 
 #include <algorithm>
 #include <vector>
@@ -17,8 +18,10 @@ public:
 private:
 	Draw _draw = Draw();
 	Map _map = Map();
+	std::vector<Player> _players;
+	Player* _localPlayer;
 
-	static const int _sleepTimeInMs = 10;
+	static const int _sleepTimeInMs = 50;
 	bool _gameOver = false;
 
 public:
@@ -26,11 +29,12 @@ public:
 	~Game() {};
 
 	void Run();
-	void DrawGameBoard();
+	void DrawScreen();
 
 	int GetSleepTimeInMs();
 	bool GetGameOver();
 	void InitGame();
+	void SetPlayerKeyDown(Game::PlayerControl, bool);
 
 private:
 	Draw* GetDraw();

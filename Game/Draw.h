@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "GameObject.h"
 #include "MovingObject.h"
+#include "Player.h"
 
 class Draw
 {
@@ -16,6 +17,7 @@ public:
 	struct DrawInput
 	{
 		Map* map;
+		Player* player;
 	};
 private:
 	GraphicsNS::Graphics* _g;
@@ -25,11 +27,11 @@ public:
 	Draw(HWND*);
 	~Draw() {};
 
-	void DrawGameBoard(DrawInput*);
+	void DrawScreen(DrawInput*);
 	GraphicsNS::Graphics* GetGraphics();
 
 private:
-	void DrawMap(Map*);
+	void DrawMap(Map*, Player*);
 	void DrawGameObject(GameObject*);
 	void DrawMovingObject(MovingObject*);
 };

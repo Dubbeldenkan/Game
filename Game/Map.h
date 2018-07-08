@@ -10,9 +10,9 @@
 class Map
 {
 public:
-	static const int MAPXSIZE = 100;
-	static const int MAPYSIZE = 100;
-	static const int TILESIZE = 5;
+	static const int MAPXSIZE = 500;
+	static const int MAPYSIZE = 500;
+	static const int TILESIZE = 20;
 
 	enum TileType { Undefined, FarmLand, Forest, Mountain, Swamp, Water };
 

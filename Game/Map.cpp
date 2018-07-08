@@ -65,7 +65,7 @@ void Map::CreateMap()
 	{
 		for (int y = 0; y < MAPYSIZE; y++)
 		{
-			if (GetTile(x, y) == 0)
+			if (GetTile(x, y) == Undefined)
 			{
 				DefineTile(x, y);
 			}
