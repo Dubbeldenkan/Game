@@ -54,17 +54,17 @@ void IO::SetKeyAction(Game* game, bool keyDown, WPARAM wParam)
 	}
 }
 
-void InitWinMain(HINSTANCE* hInst, char* winName, IO* io)
+void InitWinMain(HINSTANCE* hInst, std::string winName, IO* io)
 {
 	WNDCLASS wc = { 0 };
 	wc.lpfnWndProc = io->MsgProc;
 	wc.hInstance = *hInst;
-	wc.lpszClassName = winName;
+	wc.lpszClassName = winName.c_str();
 	wc.hCursor = (HCURSOR)LoadCursor(0, IDC_ARROW);
 	RegisterClass(&wc);
 }
 
-HWND InitWindow(HINSTANCE* hInst, char* winName, IO* io)
+HWND InitWindow(HINSTANCE* hInst, std::string winName, IO* io)
 {
 	InitWinMain(hInst, winName, io);
 
@@ -72,8 +72,8 @@ HWND InitWindow(HINSTANCE* hInst, char* winName, IO* io)
 	RECT windowRect = { 1, 1, Player::SCREENXSIZE*Map::TILESIZE, Player::SCREENYSIZE*Map::TILESIZE };
 	AdjustWindowRect(&windowRect, windowStyle, false);
 	HWND hWnd = CreateWindow(
-		winName,
-		winName,
+		winName.c_str(),
+		winName.c_str(),
 		windowStyle,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		windowRect.right - windowRect.left,

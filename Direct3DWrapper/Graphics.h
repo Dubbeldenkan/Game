@@ -32,7 +32,7 @@ namespace GraphicsNS
 		HDC _hdc;
 		LPD3DXSPRITE _sprite = 0;
 		std::vector<Image*> imageVector;
-		char imagePath[MAX_PATH];
+		std::string imagePath;
 
 		Image redPixel;
 		Image bluePixel;
@@ -50,9 +50,9 @@ namespace GraphicsNS
 		void StartDrawing();
 		void StopDrawing();
 
-		void LoadImageFromFile(const char*, Image*);
-		void LoadImageFromFile(const char*, Image*, int, int);
-		void LoadImageFromFile(const char*, Image*, int, int, int, int);
+		void LoadImageFromFile(std::string, Image*);
+		void LoadImageFromFile(std::string, Image*, int, int);
+		void LoadImageFromFile(std::string, Image*, int, int, int, int);
 
 		void Draw(Image*, int, int, float);
 		void DrawTile(Image*, int, int, int, int);

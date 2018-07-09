@@ -23,8 +23,8 @@ public:
 	static void SetKeyAction(Game* game, bool keyDown, WPARAM);
 };
 
-void InitWinMain(HINSTANCE*, char*, IO*);
+void InitWinMain(HINSTANCE*, std::string, IO*);
 
-HWND InitWindow(HINSTANCE*, char*, IO*);
+HWND InitWindow(HINSTANCE*, std::string, IO*);
 
 #endif // !CONTROL_H

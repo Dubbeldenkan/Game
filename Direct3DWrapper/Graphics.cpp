@@ -13,9 +13,7 @@ namespace GraphicsNS
 		std::string str = std::string(tempPath);
 		str.erase(str.rfind('\\'));
 		str.erase(str.rfind('\\'));
-		strcpy_s(imagePath, "");
-		strcpy_s(imagePath, str.c_str());
-		strcat_s(imagePath, "\\Bilder\\");
+		imagePath = str + "\\Bilder\\";
 
 		_d3d = Direct3DCreate9(D3D_SDK_VERSION);
 		if (_d3d == 0)
@@ -142,27 +140,25 @@ namespace GraphicsNS
 	}
 
 	//Används då man bara har en bild, dvs inte flera tiles
-	void Graphics::LoadImageFromFile(const char* fileName, Image* image)
+	void Graphics::LoadImageFromFile(std::string fileName, Image* image)
 	{
 		LoadImageFromFile(fileName, image, 0, 0, 0, 0);
 	}
 
 	//Används då man bara har en bild, dvs inte flera tiles och definierad storlek
-	void Graphics::LoadImageFromFile(const char* fileName, Image* image, int imageXSize, int imageYSize)
+	void Graphics::LoadImageFromFile(std::string fileName, Image* image, int imageXSize, int imageYSize)
 	{
 		LoadImageFromFile(fileName, image, imageXSize, imageYSize, 0, 0);
 	}
 
 	//Används då man bara har en flera tiles
-	void Graphics::LoadImageFromFile(const char* fileName, Image* image, int imageXSize, int imageYSize,
+	void Graphics::LoadImageFromFile(std::string fileName, Image* image, int imageXSize, int imageYSize,
 		int partImageSizeX, int partImageSizeY)
 	{
-		char path[MAX_PATH];
-		strcpy_s(path, imagePath);
-		strcat_s(path, fileName);
+		std::string path = imagePath + fileName;
 		HRESULT hr = D3DXCreateTextureFromFileEx(
 			_d3dDevice,
-			path,
+			path.c_str(),
 			imageXSize, imageYSize,
 			1,
 			0,
@@ -182,7 +178,7 @@ namespace GraphicsNS
 			imageVector.push_back(image);
 			char result[100];
 			strcpy_s(result, "Image ");
-			strcat_s(result, fileName);
+			strcat_s(result, fileName.c_str());
 			strcat_s(result, " was loaded\n\n");
 			OutputDebugString(result);
 		}
